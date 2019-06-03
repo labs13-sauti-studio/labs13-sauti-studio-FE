@@ -65,7 +65,7 @@ const loginReducer = (state = initialState, action) => {
 }
 
 const initialAuthState = {
-  loggedIn: localStorage.getItem('username') !== null,
+  loggedIn: false,
 }
 
 const authReducer = (state = initialAuthState, action) => {
