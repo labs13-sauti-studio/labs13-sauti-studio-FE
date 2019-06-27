@@ -4,9 +4,9 @@ import { isLoggedIn } from "../services/auth"
 class PrivateRoute extends Component {
   componentDidMount() {
     const { location } = this.props
-    let noOnLoginPage = location.pathname !== `/app/login`
+    let noOnLoginPage = location.pathname !== `/login`
     if (!isLoggedIn() && noOnLoginPage) {
-      navigate("/app/login")
+      navigate("/login")
       return null
     }
   }
