@@ -29,11 +29,9 @@ const Navbar = ({ loggedIn }) => {
             <Button color="primary">Login</Button>
           </Link>
         ) : (
-          <Router>
-           <PrivateRoute path="/profile">
+          <Link to="/profile">
             <Button color="primary">Profile</Button>
-          </PrivateRoute>
-          </Router>
+          </Link>
         )}
       </Toolbar>
     </AppBar>

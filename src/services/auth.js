@@ -1,19 +1,21 @@
-export const isBrowser = () => typeof window !== "undefined"
+const isBrowser = typeof window !== `undefined`
 
-export const getUser = () =>
-  isBrowser() && window.localStorage.getItem("gatsbyUser")
-    ? JSON.parse(window.localStorage.getItem("gatsbyUser"))
+const getUser = () =>
+  window.localStorage.gatsbyUser
+    ? JSON.parse(window.localStorage.gatsbyUser)
     : {}
 
-const setUser = user =>
-  window.localStorage.setItem("gatsbyUser", JSON.stringify(user))
+const setUser = user => (window.localStorage.gatsbyUser = JSON.stringify(user))
 
 export const handleLogin = ({ username, password }) => {
-  if (username === `john` && password === `pass`) {
+  if (!isBrowser) return false
+
+  if (username === `gatsby` && password === `demo`) {
+    console.log(`Credentials match! Setting the active user.`)
     return setUser({
-      username: `john`,
-      name: `Johnny`,
-      email: `johnny@example.org`,
+      name: `Jim`,
+      legalName: `James K. User`,
+      email: `jim@example.org`,
     })
   }
 
@@ -21,12 +23,19 @@ export const handleLogin = ({ username, password }) => {
 }
 
 export const isLoggedIn = () => {
+  if (!isBrowser) return false
+
   const user = getUser()
 
-  return !!user.username
+  return !!user.email
 }
 
+export const getCurrentUser = () => isBrowser && getUser()
+
 export const logout = callback => {
+  if (!isBrowser) return
+
+  console.log(`Ensuring the \`gatsbyUser\` property exists.`)
   setUser({})
   callback()
 }
