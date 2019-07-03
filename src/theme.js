@@ -65,6 +65,7 @@ svg {width: auto;}
 const { light, dark, grey, red, blue, yellow } = theme.colors
 export const TreeStyles = styled.div`
   border-radius: 10px;
+  /* color: pink; */
   border: 1px solid ${lighten(0.5, theme.grey)};
   height: 65vh;
   /* max-width: 100%; */
@@ -133,7 +134,7 @@ export const TreeStyles = styled.div`
   .rst__lineHalfVerticalBottom::after {
     position: absolute;
     content: '';
-    background-color: ${yellow};
+    background-color: ${lighten(0.2, theme.blue)};
   }
 
   /**
@@ -224,7 +225,7 @@ export const TreeStyles = styled.div`
   .rst__highlightLineVertical::before {
     position: absolute;
     content: '';
-    background-color: ${blue};
+    background-color: ${theme.blue};
     width: 8px;
     margin-left: -4px;
     left: 50%;
@@ -267,7 +268,7 @@ export const TreeStyles = styled.div`
     border-left: 4px solid transparent;
     border-right: 4px solid transparent;
     border-top: 4px solid white;
-    animation: arrow-pulse 1s infinite linear both;
+    /* animation: arrow-pulse 1s infinite linear both; */
   }
 
   .rst__rtl.rst__highlightLineVertical::after {
@@ -288,18 +289,18 @@ export const TreeStyles = styled.div`
     z-index: 3;
     content: '';
     position: absolute;
-    border-top: solid 8px ${blue};
-    border-left: solid 8px ${blue};
+    border-top: solid 8px ${theme.blue};
+    border-left: solid 8px ${theme.blue};
     box-sizing: border-box;
     height: calc(50% + 4px);
     top: 50%;
-    /* margin-top: -4px; */
+    margin-top: -4px;
     right: 0;
     width: calc(50% + 4px);
   }
 
   .rst__rtl.rst__highlightTopLeftCorner::before {
-    border-right: solid 8px ${blue};
+    border-right: solid 8px ${theme.blue};
     border-left: none;
     left: 0;
     right: initial;
@@ -312,23 +313,24 @@ export const TreeStyles = styled.div`
  * |  +->|
  * +-----+
  */
+
   .rst__highlightBottomLeftCorner {
     z-index: 3;
   }
   .rst__highlightBottomLeftCorner::before {
     content: '';
     position: absolute;
-    border-bottom: solid 8px ${blue};
-    border-left: solid 8px ${blue};
+    border-bottom: solid 8px ${theme.blue};
+    border-left: solid 8px ${theme.blue};
     box-sizing: border-box;
     height: calc(100% + 4px);
     top: 0;
-    right: 12px;
+    right: 18px;
     width: calc(50% - 8px);
   }
 
   .rst__rtl.rst__highlightBottomLeftCorner::before {
-    border-right: solid 8px ${blue}6;
+    border-right: solid 8px ${theme.blue};
     border-left: none;
     left: 12px;
     right: initial;
@@ -343,13 +345,13 @@ export const TreeStyles = styled.div`
     margin-top: -12px;
     border-top: 12px solid transparent;
     border-bottom: 12px solid transparent;
-    border-left: 12px solid ${blue};
+    border-left: 12px solid ${theme.blue};
   }
 
   .rst__rtl.rst__highlightBottomLeftCorner::after {
     left: 0;
     right: initial;
-    border-right: 12px solid ${blue} 6;
+    border-right: 12px solid ${theme.blue};
     border-left: none;
   }
 
@@ -360,7 +362,7 @@ export const TreeStyles = styled.div`
   }
 
   .rst__rtl.rst__rowWrapper {
-    padding: 10px 0 10px 10px;
+    /* padding: 10px 0 10px 10px; */
   }
 
   .rst__row {
@@ -369,6 +371,7 @@ export const TreeStyles = styled.div`
     display: flex;
   }
   .rst__row > * {
+    padding: 10px 10px 10px 0;
     box-sizing: border-box;
   }
 
@@ -387,7 +390,7 @@ export const TreeStyles = styled.div`
   }
   .rst__rowLandingPad::before,
   .rst__rowCancelPad::before {
-    background-color: ${lighten(0.2, theme.yellow)};
+    background-color: ${theme.light};
     border: 2px solid white;
     content: '';
     position: absolute;
@@ -431,18 +434,18 @@ export const TreeStyles = styled.div`
   .rst__rowContents {
     position: relative;
     height: 100%;
-    /* border: solid #bbb 1px; */
-    /* border-left: none; */
-    box-shadow: 0 2px 2px -2px;
-    padding: 0 5px 0 10px;
-    border-radius: 2px;
+    border: solid ${lighten(0.5, theme.grey)} 1px;
+    border-left: none;
+    /* box-shadow: 0 2px 2px -2px; */
+    padding: 0 8px 0 10px;
+    border-radius: 0px 5px 5px 0px;
     min-width: fit-content;
     flex: 1 0 auto;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    background: white;
     /* margin-bottom: 1rem; */
-    background-color: white;
   }
 
   .rst__rtl.rst__rowContents {
@@ -476,21 +479,28 @@ export const TreeStyles = styled.div`
 
   .rst__moveHandle,
   .rst__loadingHandle {
-    height: 100%;
-    width: 44px;
-    background: ${grey}
+    vertical-align: middle;
+    /* border: none; */
+    border-style: solid;
+    border-width: 1px;
+    border: 1px solid  ${lighten(0.5, theme.grey)};
+    border-radius: 5px 0 0 5px;
+    /* height: 22px; */
+    width: 22px;
+    /* color: pink; */
+    /* background-color: pink; */
+    background:
       url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MiIgaGVpZ2h0PSI0MiI+PGcgc3Ryb2tlPSIjRkZGIiBzdHJva2Utd2lkdGg9IjIuOSIgPjxwYXRoIGQ9Ik0xNCAxNS43aDE0LjQiLz48cGF0aCBkPSJNMTQgMjEuNGgxNC40Ii8+PHBhdGggZD0iTTE0IDI3LjFoMTQuNCIvPjwvZz4KPC9zdmc+')
       no-repeat center;
-    box-shadow: 0 2px 2px -2px;
     cursor: move;
-    margin-right: 0.5rem;
-    border-radius: 1px;
+    /* margin-left: 0.5rem; */
+    /* border-radius: 1px; */
     z-index: 1;
   }
 
   .rst__loadingHandle {
     cursor: default;
-    background: #d9d9d9;
+    background:  ${lighten(0.1, theme.red)};
   }
 
   @keyframes pointFade {
@@ -530,7 +540,7 @@ export const TreeStyles = styled.div`
     margin: 0 auto;
     width: 11%;
     height: 30%;
-    background-color: #fff;
+    /* background-color: #fff; */
     border-radius: 30%;
     animation: pointFade 800ms infinite ease-in-out both;
   }
@@ -625,8 +635,8 @@ export const TreeStyles = styled.div`
     appearance: none;
     border: none;
     position: absolute;
-    border-radius: 100%;
-    box-shadow: 0 0 0 1px ${blue};
+    border-radius: 5px;
+    /* box-shadow: 0 0 0 1px ${blue}; */
     width: 16px;
     height: 16px;
     padding: 0;
@@ -641,7 +651,7 @@ export const TreeStyles = styled.div`
   .rst__collapseButton:focus,
   .rst__expandButton:focus {
     outline: none;
-    box-shadow: 0 0 0 1px #000, 0 0 1px 3px ${blue};
+    /* box-shadow: 0 0 0 1px #000, 0 0 1px 3px ${blue}; */
   }
   .rst__collapseButton:hover:not(:active),
   .rst__expandButton:hover:not(:active) {
@@ -657,7 +667,7 @@ export const TreeStyles = styled.div`
   }
 
   .rst__expandButton {
-    background: ${light}
+    background: ${blue}
       url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCI+PGNpcmNsZSBjeD0iOSIgY3k9IjkiIHI9IjgiIGZpbGw9IiNGRkYiLz48ZyBzdHJva2U9IiM5ODk4OTgiIHN0cm9rZS13aWR0aD0iMS45IiA+PHBhdGggZD0iTTQuNSA5aDkiLz48cGF0aCBkPSJNOSA0LjV2OSIvPjwvZz4KPC9zdmc+')
       no-repeat center;
   }
@@ -673,7 +683,7 @@ export const TreeStyles = styled.div`
   .rst__lineChildren::after {
     content: '';
     position: absolute;
-    background-color: ${dark};
+    background-color: ${lighten(0.2, theme.blue)};
     width: 1px;
     left: 50%;
     bottom: 0;
@@ -696,7 +706,7 @@ export const TreeStyles = styled.div`
     box-sizing: border-box;
   }
   .rst__placeholder::before {
-    border: 2px solid ${light};
+    border: 2px solid ${theme.dark};
     content: '';
     position: absolute;
     top: 5px;
@@ -721,7 +731,7 @@ export const TreeStyles = styled.div`
   }
   .rst__placeholderLandingPad::before,
   .rst__placeholderCancelPad::before {
-    background-color: ${theme.yellow};
+    background-color: ${lighten(0.2, theme.blue)};
     border-color: white;
   }
 

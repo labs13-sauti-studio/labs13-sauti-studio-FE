@@ -190,13 +190,14 @@ const SortableTree = props => {
                       }).node.id,
                     })
                     .then(({ data: newNode }) => {
-                      props.setActiveRes(newNode)
+                      console.log(newNode)
+                      props.setActiveRes(newNode.added)
                       setTreeData(
                         addNodeUnderParent({
                           treeData,
                           parentKey: path[path.length - 1],
                           getNodeKey,
-                          newNode,
+                          newNode: newNode.added,
                           ...settings,
                         }).treeData
                       )
