@@ -30,9 +30,9 @@ const CenteredTabs = connect(
     tab: state.ui.workflowTab,
   }),
   { setWorkflowTab }
-)(({ setWorkflowTab, tab }) => {
+)(({ setWorkflowTab }) => {
   const classes = useStyles()
-  const [value, setValue] = React.useState(tab)
+  const [value, setValue] = React.useState(0)
 
   function handleChange(event, newValue) {
     setValue(newValue)

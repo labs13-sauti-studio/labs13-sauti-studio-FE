@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-expressions */
 /* eslint-disable import/no-named-default */
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   default as ReactSortableTree,
   addNodeUnderParent,
@@ -58,6 +58,10 @@ const SortableTree = props => {
     props.items.length === 0 ? [] : createTree(props.items, settings)
   )
   const [title, setTitle] = useState('')
+  const [loading, setLoading] = useState(true)
+  useEffect(() => {
+    setLoading(props.loading)
+  }, [props.loading])
 
   const getNodeKey = ({ treeIndex }) => treeIndex
   return (
@@ -114,9 +118,11 @@ const SortableTree = props => {
         </div>
       </Flex>
       <TreeStyles>
-        {/* SORTABLE
-              TREE
-              COMPONENT */}
+        {/*
+        SORTABLE
+        TREE
+        COMPONENT
+         */}
         <ReactSortableTree
           treeData={treeData}
           onMoveNode={({ node, nextIndex }) => {
@@ -228,10 +234,9 @@ const SortableTree = props => {
 export default connect(
   state => ({
     workflow: state.workflow,
-    loading: state.responses.hasBeenLoaded,
     items: state.responses.unSaved,
     active: state.responses.modal,
-    hasBeenLoaded: state.responses.hasBeenLoaded,
+    loading: state.responses.hasBeenLoaded,
   }),
   { setActiveRes, saveTree }
 )(SortableTree)
