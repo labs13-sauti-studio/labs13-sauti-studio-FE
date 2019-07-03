@@ -10,6 +10,7 @@ import CardContent from '@material-ui/core/CardContent'
 import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
 import EditUserDetailsModal from '@/EditUserDetailsModel'
+import { navigate } from 'gatsby'
 
 const ProfilePage = ({
   company_name,
@@ -42,9 +43,17 @@ const ProfilePage = ({
         </Typography>
       </CardContent>
       <CardActions>
-        <a href={`${process.env.GATSBY_API_URL}/logout`}>
+        {/* <a href={`${process.env.GATSBY_API_URL}/logout`}>
           <Button size="small">Logout</Button>
-        </a>
+        </a> */}
+        <Button
+          onClick={() => {
+            localStorage.clear()
+            window.location.replace(`${process.env.GATSBY_API_URL}/logout`)
+          }}
+        >
+          Logout
+        </Button>
         <Button onClick={() => toggleEditProfileModal(!isEditingProfile)}>
           Edit Profile
         </Button>

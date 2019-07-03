@@ -7,9 +7,12 @@ import { navigate } from 'gatsby'
 // const UserLayout = ({ children }) => <Dashboard>{children}</Dashboard>
 
 class UserLayout extends Component {
-  componentDidMount = async () => {
+  async componentDidMount() {
     await this.props.loadUserInfo()
-    if (this.props.user_id === null) navigate('/')
+    const status = localStorage.getItem('user')
+    if (!status) {
+      navigate('/')
+    }
   }
 
   render() {

@@ -8,9 +8,10 @@ export const loadUserInfo = () => dispatch => {
   dispatch({ type: LOAD_USER_START })
   return axiosInstance
     .get('/profile')
-    .then(({ data: user }) =>
+    .then(async ({ data: user }) => {
+      await localStorage.setItem('user', user.id)
       dispatch({ type: LOAD_USER_SUCCESS, payload: user })
-    )
+    })
     .catch(() =>
       dispatch({
         type: LOAD_USER_FAILURE,
