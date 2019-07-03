@@ -1,7 +1,7 @@
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/prop-types */
 /* eslint-disable no-shadow */
-import { LinearProgress } from '@material-ui/core'
+import { Divider, Tabs, Tab, LinearProgress } from '@material-ui/core'
 import React, { Component } from 'react'
 import Typography from '@material-ui/core/Typography'
 import { connect } from 'react-redux'
@@ -11,17 +11,7 @@ import { loadWorkflow, fetchResponses } from 'actions'
 import SortableTree from '@/SortableTree'
 import { toggleDeleteModal, toggleResModal } from 'actions/responsesActions'
 import { setWorkflowTab } from 'actions/uiActions'
-import { makeStyles } from '@material-ui/core/styles'
 import { Flex } from '@/utility'
-import Paper from '@material-ui/core/Paper'
-import Tabs from '@material-ui/core/Tabs'
-import Tab from '@material-ui/core/Tab'
-
-const useStyles = makeStyles({
-  root: {
-    flexGrow: 1,
-  },
-})
 
 const CenteredTabs = connect(
   state => ({
@@ -29,26 +19,19 @@ const CenteredTabs = connect(
   }),
   { setWorkflowTab }
 )(({ setWorkflowTab }) => {
-  const classes = useStyles()
   const [value, setValue] = React.useState(0)
 
-  function handleChange(event, newValue) {
-    setValue(newValue)
-  }
-
   return (
-    <Paper className={classes.root}>
-      <Tabs
-        value={value}
-        onChange={handleChange}
-        indicatorColor="primary"
-        textColor="primary"
-        centered
-      >
-        <Tab label="Builder" onClick={() => setWorkflowTab(value)} />
-        <Tab label="Clients" onClick={() => setWorkflowTab(value)} />
-      </Tabs>
-    </Paper>
+    <Tabs
+      value={value}
+      onChange={(event, index) => setValue(index)}
+      indicatorColor="primary"
+      textColor="primary"
+      centered
+    >
+      <Tab label="Builder" onClick={() => setWorkflowTab(value)} />
+      <Tab label="Clients" onClick={() => setWorkflowTab(value)} />
+    </Tabs>
   )
 })
 
@@ -66,21 +49,23 @@ class WorkflowPage extends Component {
       <LinearProgress />
     ) : (
       <UserLayout>
-        <Flex align="center">
-          <Typography variant="h3">{name}</Typography>
-          <Typography variant="h6" color="textSecondary">
-            {category}
-          </Typography>
-          <Typography variant="h6" color="textSecondary">
-            {workflow.code}
-          </Typography>
-        </Flex>
         <CenteredTabs />
-        <br></br>
+        <Divider style={{ marginBottom: '1rem' }} />
         {tab === 0 ? (
           <div>CLIENT LIST</div>
         ) : (
-          <SortableTree items={responses} />
+          <>
+            <Flex align="center">
+              <Typography variant="h3">{name}</Typography>
+              <Typography variant="h6" color="textSecondary">
+                {category}
+              </Typography>
+              <Typography variant="h6" color="textSecondary">
+                {workflow.code}
+              </Typography>
+            </Flex>
+            <SortableTree items={responses} />
+          </>
         )}
       </UserLayout>
     )

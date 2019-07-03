@@ -15,9 +15,10 @@ import { TreeStyles } from 'theme'
 import { connect } from 'react-redux'
 import {
   Button,
-  LinearProgress,
+  Switch,
   TextField,
   Typography,
+  FormControlLabel,
 } from '@material-ui/core'
 import AddIcon from '@material-ui/icons/Add'
 import EditIcon from '@material-ui/icons/Edit'
@@ -66,8 +67,8 @@ const SortableTree = props => {
   const getNodeKey = ({ treeIndex }) => treeIndex
   return (
     <section>
-      <Flex>
-        <div>
+      <Flex align="center">
+        <Flex align="center" justify="flex-start">
           <TextField
             id="standard-name"
             variant="outlined"
@@ -101,20 +102,31 @@ const SortableTree = props => {
           >
             Add Root
           </Button>
-        </div>
+        </Flex>
         <div>
-          <Button
-            variant="outlined"
-            color="secondary"
-            onClick={() => {
-              setSettings({ ...settings, expanded: !settings.expanded })
-              setTreeData(
-                toggleExpandedForAll({ treeData, expanded: !settings.expanded })
-              )
-            }}
-          >
-            {settings.expanded ? 'Collapse' : 'Expand'}
-          </Button>
+          <FormControlLabel
+            label={settings.expanded ? 'Collapse' : 'Expand'}
+            labelPlacement="start"
+            control={
+              <Switch
+                checked={settings.expanded}
+                onChange={() => {
+                  setSettings({
+                    ...settings,
+                    expanded: !settings.expanded,
+                  })
+                  setTreeData(
+                    toggleExpandedForAll({
+                      treeData,
+                      expanded: !settings.expanded,
+                    })
+                  )
+                }}
+                value="checkedA"
+                inputProps={{ 'aria-label': 'secondary checkbox' }}
+              />
+            }
+          />
         </div>
       </Flex>
       <TreeStyles>
