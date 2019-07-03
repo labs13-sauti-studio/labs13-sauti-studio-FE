@@ -6,6 +6,7 @@ import {
   TOGGLE_RESPONSE_HOVER,
   TOGGLE_SIDEBAR,
   TOGGLE_WORKFLOW_MODAL,
+  SET_WORKFLOW_TAB,
 } from 'actions'
 
 const initialUiState = {
@@ -18,6 +19,7 @@ const initialUiState = {
   isEditingProfile: false,
   isHoveringQuestion: false,
   isSidebarOpen: false,
+  workflowTab: 1,
 }
 
 const uiReducer = (state = initialUiState, action) => {
@@ -42,6 +44,9 @@ const uiReducer = (state = initialUiState, action) => {
 
     case TOGGLE_RESPONSE_HOVER:
       return { ...state, isHoveringQuestion: action.payload }
+
+    case SET_WORKFLOW_TAB:
+      return { ...state, workflowTab: action.payload }
 
     default:
       return state

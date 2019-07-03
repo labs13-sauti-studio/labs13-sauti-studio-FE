@@ -32,3 +32,7 @@ export const TOGGLE_RESPONSE_HOVER = 'TOGGLE_RESPONSE_HOVER'
 
 export const toggleResponseHover = bool => dispatch =>
   dispatch({ type: TOGGLE_RESPONSE_HOVER, payload: bool })
+
+export const SET_WORKFLOW_TAB = 'SET_WORKFLOW_TAB'
+export const setWorkflowTab = number => dispatch =>
+  dispatch({ type: SET_WORKFLOW_TAB, payload: number })

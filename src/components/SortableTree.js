@@ -58,6 +58,7 @@ const SortableTree = props => {
     props.items.length === 0 ? [] : createTree(props.items, settings)
   )
   const [title, setTitle] = useState('')
+
   const getNodeKey = ({ treeIndex }) => treeIndex
   return (
     <section>
@@ -114,6 +115,9 @@ const SortableTree = props => {
       </Flex>
       {props.loading ? (
         <TreeStyles>
+          {/* SORTABLE
+              TREE
+              COMPONENT */}
           <ReactSortableTree
             treeData={treeData}
             onMoveNode={({ node, nextIndex }) => {
@@ -122,10 +126,8 @@ const SortableTree = props => {
                 index: nextIndex,
               })
             }}
-            onChange={treeData => {
-              // console.log(opts)
-              setTreeData(treeData)
-            }}
+            onChange={treeData => setTreeData(treeData)}
+            onClick={treeData => setTreeData(treeData)}
             generateNodeProps={({ node, path }) => ({
               title:
                 node.id === props.active.id ? (

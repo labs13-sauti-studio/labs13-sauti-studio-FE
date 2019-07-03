@@ -1,5 +1,6 @@
 import { createMuiTheme } from '@material-ui/core/styles'
 import styled, { createGlobalStyle, css } from 'styled-components'
+import { lighten } from 'polished'
 
 export const theme = {
   light: '#f2f5f8',
@@ -65,7 +66,7 @@ const { light, dark, grey, red, blue, yellow } = theme.colors
 export const TreeStyles = styled.div`
   border-radius: 10px;
   border: 2px solid black;
-  height: 79vh;
+  height: 70vh;
   /* max-width: 100%; */
   margin: 1rem 0;
   padding: 1rem;
@@ -292,7 +293,7 @@ export const TreeStyles = styled.div`
     box-sizing: border-box;
     height: calc(50% + 4px);
     top: 50%;
-    margin-top: -4px;
+    /* margin-top: -4px; */
     right: 0;
     width: calc(50% + 4px);
   }
@@ -386,7 +387,7 @@ export const TreeStyles = styled.div`
   }
   .rst__rowLandingPad::before,
   .rst__rowCancelPad::before {
-    background-color: lightblue;
+    background-color: ${lighten(0.2, theme.yellow)};
     border: 2px solid white;
     content: '';
     position: absolute;
@@ -430,16 +431,17 @@ export const TreeStyles = styled.div`
   .rst__rowContents {
     position: relative;
     height: 100%;
-    border: solid #bbb 1px;
+    /* border: solid #bbb 1px; */
     /* border-left: none; */
     box-shadow: 0 2px 2px -2px;
     padding: 0 5px 0 10px;
     border-radius: 2px;
-    min-width: 230px;
+    min-width: fit-content;
     flex: 1 0 auto;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    /* margin-bottom: 1rem; */
     background-color: white;
   }
 
@@ -719,7 +721,7 @@ export const TreeStyles = styled.div`
   }
   .rst__placeholderLandingPad::before,
   .rst__placeholderCancelPad::before {
-    background-color: lightblue;
+    background-color: ${theme.yellow};
     border-color: white;
   }
 

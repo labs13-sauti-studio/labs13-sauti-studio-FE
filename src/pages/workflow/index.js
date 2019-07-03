@@ -1,7 +1,7 @@
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/prop-types */
 /* eslint-disable no-shadow */
-import { Divider, LinearProgress } from '@material-ui/core'
+// import { Divider, LinearProgress } from '@material-ui/core'
 import React, { Component } from 'react'
 import Typography from '@material-ui/core/Typography'
 import { connect } from 'react-redux'
@@ -9,9 +9,48 @@ import PropTypes from 'prop-types'
 import UserLayout from '@/userLayout'
 import { loadWorkflow, fetchResponses } from 'actions'
 import SortableTree from '@/SortableTree'
-import DeleteWarningModal from '@/DeleteWarningModal'
+// import DeleteWarningModal from '@/DeleteWarningModal'
 import { toggleDeleteModal, toggleResModal } from 'actions/responsesActions'
-import AddModal from '@/AddModal'
+import { setWorkflowTab } from 'actions/uiActions'
+// import AddModal from '@/AddModal'
+import { makeStyles } from '@material-ui/core/styles'
+
+import Paper from '@material-ui/core/Paper'
+import Tabs from '@material-ui/core/Tabs'
+import Tab from '@material-ui/core/Tab'
+
+const useStyles = makeStyles({
+  root: {
+    flexGrow: 1,
+  },
+})
+
+const CenteredTabs = connect(
+  state => state.ui.workflowTab,
+  { setWorkflowTab }
+)(({ setWorkflowTab, tab }) => {
+  const classes = useStyles()
+  const [value, setValue] = React.useState(tab)
+
+  function handleChange(event, newValue) {
+    setValue(newValue)
+  }
+
+  return (
+    <Paper className={classes.root}>
+      <Tabs
+        value={value}
+        onChange={handleChange}
+        indicatorColor="primary"
+        textColor="primary"
+        centered
+      >
+        <Tab label="Builder" onClick={() => setWorkflowTab(value)} />
+        <Tab label="Clients" onClick={() => setWorkflowTab(value)} />
+      </Tabs>
+    </Paper>
+  )
+})
 
 class WorkflowPage extends Component {
   componentDidMount() {
@@ -32,8 +71,14 @@ class WorkflowPage extends Component {
         <Typography variant="h6" color="textSecondary">
           {code}
         </Typography>
-        <Divider style={{ margin: '1rem 0' }} />
-        {loading ? <LinearProgress /> : <SortableTree items={responses} />}
+        {/* <Divider style={{ margin: '1rem 0' }} /> */}
+        <CenteredTabs></CenteredTabs>
+        <br></br>
+        {this.props.tab === 0 ? (
+          <div>CLIENT LIST</div>
+        ) : (
+          <SortableTree items={responses} />
+        )}
       </UserLayout>
     )
   }
@@ -41,6 +86,7 @@ class WorkflowPage extends Component {
 
 export default connect(
   state => ({
+    tab: state.ui.workflowTab,
     id: state.workflow.id,
     name: state.workflow.name,
     category: state.workflow.category,
