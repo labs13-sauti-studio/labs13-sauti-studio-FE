@@ -113,118 +113,114 @@ const SortableTree = props => {
           </Button>
         </div>
       </Flex>
-      {props.loading ? (
-        <TreeStyles>
-          {/* SORTABLE
+      <TreeStyles>
+        {/* SORTABLE
               TREE
               COMPONENT */}
-          <ReactSortableTree
-            treeData={treeData}
-            onMoveNode={({ node, nextIndex }) => {
-              axiosInstance.put(`responses/${node.id}`, {
-                ...node,
-                index: nextIndex,
-              })
-            }}
-            onChange={treeData => setTreeData(treeData)}
-            onClick={treeData => setTreeData(treeData)}
-            generateNodeProps={({ node, path }) => ({
-              title:
-                node.id === props.active.id ? (
-                  <TextField
-                    id="standard-name"
-                    value={node.title}
-                    onKeyDown={event => {
-                      if (event.keyCode === 13) {
-                        axiosInstance.put(`/responses/${node.id}`, node)
-                        props.setActiveRes({ id: null })
-                      }
-                    }}
-                    onChange={event =>
-                      setTreeData(
-                        changeNodeAtPath({
-                          treeData,
-                          path,
-                          getNodeKey,
-                          newNode: {
-                            ...node,
-                            title: event.target.value,
-                          },
-                        })
-                      )
+        <ReactSortableTree
+          treeData={treeData}
+          onMoveNode={({ node, nextIndex }) => {
+            axiosInstance.put(`responses/${node.id}`, {
+              ...node,
+              index: nextIndex,
+            })
+          }}
+          onChange={treeData => setTreeData(treeData)}
+          onClick={treeData => setTreeData(treeData)}
+          generateNodeProps={({ node, path }) => ({
+            title:
+              node.id === props.active.id ? (
+                <TextField
+                  id="standard-name"
+                  value={node.title}
+                  onKeyDown={event => {
+                    if (event.keyCode === 13) {
+                      axiosInstance.put(`/responses/${node.id}`, node)
+                      props.setActiveRes({ id: null })
                     }
-                  />
-                ) : (
-                  <Typography variant="h6">{node.title}</Typography>
-                ),
-              buttons: [
-                // Add new response
-                <IconButton
-                  aria-label="Add"
-                  size="small"
-                  onClick={async () =>
-                    axiosInstance
-                      .post(`responses/${props.workflow.id}`, {
-                        title: 'new item',
-                        parent: getNodeAtPath({
+                  }}
+                  onChange={event =>
+                    setTreeData(
+                      changeNodeAtPath({
+                        treeData,
+                        path,
+                        getNodeKey,
+                        newNode: {
+                          ...node,
+                          title: event.target.value,
+                        },
+                      })
+                    )
+                  }
+                />
+              ) : (
+                <Typography variant="h6">{node.title}</Typography>
+              ),
+            buttons: [
+              // Add new response
+              <IconButton
+                aria-label="Add"
+                size="small"
+                onClick={async () =>
+                  axiosInstance
+                    .post(`responses/${props.workflow.id}`, {
+                      title: 'new item',
+                      parent: getNodeAtPath({
+                        treeData,
+                        path,
+                        getNodeKey,
+                      }).node.id,
+                    })
+                    .then(({ data: newNode }) => {
+                      props.setActiveRes(newNode)
+                      setTreeData(
+                        addNodeUnderParent({
+                          treeData,
+                          parentKey: path[path.length - 1],
+                          getNodeKey,
+                          newNode,
+                          ...settings,
+                        }).treeData
+                      )
+                    })
+                }
+              >
+                <AddIcon />
+              </IconButton>,
+              // Edit clicked response
+              <IconButton
+                aria-label="Edit"
+                size="small"
+                onClick={() => props.setActiveRes(node)}
+              >
+                <EditIcon />
+              </IconButton>,
+              // Delete current response
+              <IconButton
+                aria-label="Delete"
+                size="small"
+                onClick={() =>
+                  axiosInstance
+                    .delete(
+                      `responses/${
+                        getNodeAtPath({
                           treeData,
                           path,
                           getNodeKey,
-                        }).node.id,
-                      })
-                      .then(({ data: newNode }) => {
-                        props.setActiveRes(newNode)
-                        setTreeData(
-                          addNodeUnderParent({
-                            treeData,
-                            parentKey: path[path.length - 1],
-                            getNodeKey,
-                            newNode,
-                            ...settings,
-                          }).treeData
-                        )
-                      })
-                  }
-                >
-                  <AddIcon />
-                </IconButton>,
-                // Edit clicked response
-                <IconButton
-                  aria-label="Edit"
-                  size="small"
-                  onClick={() => props.setActiveRes(node)}
-                >
-                  <EditIcon />
-                </IconButton>,
-                // Delete current response
-                <IconButton
-                  aria-label="Delete"
-                  size="small"
-                  onClick={() =>
-                    axiosInstance
-                      .delete(
-                        `responses/${
-                          getNodeAtPath({
-                            treeData,
-                            path,
-                            getNodeKey,
-                          }).node.id
-                        }`
-                      )
-                      .then(({ data: { current } }) =>
-                        setTreeData(createTree(current, settings))
-                      )
-                  }
-                >
-                  <DeleteIcon />
-                </IconButton>,
-              ],
-            })}
-          />
-        </TreeStyles>
-      ) : (
-        <LinearProgress />
-      )}
+                        }).node.id
+                      }`
+                    )
+                    .then(({ data: { current } }) =>
+                      setTreeData(createTree(current, settings))
+                    )
+                }
+              >
+                <DeleteIcon />
+              </IconButton>,
+            ],
+          })}
+        />
+      </TreeStyles>
     </section>
   )
 }
@@ -235,6 +231,7 @@ export default connect(
     loading: state.responses.hasBeenLoaded,
     items: state.responses.unSaved,
     active: state.responses.modal,
+    hasBeenLoaded: state.responses.hasBeenLoaded,
   }),
   { setActiveRes, saveTree }
 )(SortableTree)

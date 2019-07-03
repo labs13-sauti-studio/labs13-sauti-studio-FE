@@ -1,7 +1,7 @@
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/prop-types */
 /* eslint-disable no-shadow */
-// import { Divider, LinearProgress } from '@material-ui/core'
+import { LinearProgress } from '@material-ui/core'
 import React, { Component } from 'react'
 import Typography from '@material-ui/core/Typography'
 import { connect } from 'react-redux'
@@ -26,7 +26,9 @@ const useStyles = makeStyles({
 })
 
 const CenteredTabs = connect(
-  state => state.ui.workflowTab,
+  state => ({
+    tab: state.ui.workflowTab,
+  }),
   { setWorkflowTab }
 )(({ setWorkflowTab, tab }) => {
   const classes = useStyles()
@@ -62,6 +64,9 @@ class WorkflowPage extends Component {
   render() {
     const { category, name, responses, code, loading } = this.props
 
+    const TreeBuilder = () =>
+      loading ? <LinearProgress /> : <SortableTree items={responses} />
+
     return (
       <UserLayout>
         <Typography variant="h3">{name}</Typography>
@@ -74,11 +79,7 @@ class WorkflowPage extends Component {
         {/* <Divider style={{ margin: '1rem 0' }} /> */}
         <CenteredTabs></CenteredTabs>
         <br></br>
-        {this.props.tab === 0 ? (
-          <div>CLIENT LIST</div>
-        ) : (
-          <SortableTree items={responses} />
-        )}
+        {this.props.tab === 0 ? <div>CLIENT LIST</div> : <TreeBuilder />}
       </UserLayout>
     )
   }
