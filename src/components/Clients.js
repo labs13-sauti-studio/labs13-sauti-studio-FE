@@ -43,9 +43,12 @@ class Clients extends Component {
   }
 
   render() {
+    return (
     <div>
       CLIENT LIST
     </div>
+
+    )
   }
 }
 
