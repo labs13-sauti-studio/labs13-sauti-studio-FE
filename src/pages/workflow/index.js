@@ -15,6 +15,8 @@ import { setWorkflowTab } from 'actions/uiActions'
 // import AddModal from '@/AddModal'
 import { makeStyles } from '@material-ui/core/styles'
 
+import Clients from '../../components/Clients'
+
 import Paper from '@material-ui/core/Paper'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
@@ -79,7 +81,7 @@ class WorkflowPage extends Component {
         {/* <Divider style={{ margin: '1rem 0' }} /> */}
         <CenteredTabs></CenteredTabs>
         <br></br>
-        {this.props.tab === 0 ? <div>CLIENT LIST</div> : <TreeBuilder />}
+        {this.props.tab === 0 ? <div>CLIENT LIST <Clients /></div> : <TreeBuilder />}
       </UserLayout>
     )
   }
