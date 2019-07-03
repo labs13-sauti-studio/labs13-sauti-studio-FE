@@ -10,11 +10,12 @@ import TextField from '@material-ui/core/TextField'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import {
-  toggleWorkflowModal,
+  loadUserWorkflowsClient,
   closeWorkflowModal,
   addUserWorkflow,
+  addUserWorkflowClient
 } from 'actions'
-
+import { axiosInstance } from 'helpers'
 class Clients extends Component {
   constructor() {
     super()
@@ -27,7 +28,11 @@ class Clients extends Component {
   }
 
  
-
+  componentDidMount() {
+    axiosInstance.get(`https://sauti-studio.herokuapp.com/clients`)
+    .then(res => console.log(res))
+    .catch(err => console.log(err))
+  }
   handleInput = e => {
     this.setState({ [e.target.name]: e.target.value })
   }
@@ -38,14 +43,14 @@ class Clients extends Component {
     const obj = { phone_num, isActive, workflow_id }
     const { dispatch } = this.props
 
-    dispatch(addUserWorkflow(obj))
-    dispatch(closeWorkflowModal())
+    dispatch(addUserWorkflowClient(obj))
+    dispatch(loadUserWorkflowsClient())
   }
 
   render() {
     return (
     <div>
-      CLIENT LIST
+      <TextField id="time" type="text" />
     </div>
 
     )
