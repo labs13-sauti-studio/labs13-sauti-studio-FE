@@ -9,12 +9,10 @@ import PropTypes from 'prop-types'
 import UserLayout from '@/userLayout'
 import { loadWorkflow, fetchResponses } from 'actions'
 import SortableTree from '@/SortableTree'
-// import DeleteWarningModal from '@/DeleteWarningModal'
 import { toggleDeleteModal, toggleResModal } from 'actions/responsesActions'
 import { setWorkflowTab } from 'actions/uiActions'
-// import AddModal from '@/AddModal'
 import { makeStyles } from '@material-ui/core/styles'
-
+import { Flex } from '@/utility'
 import Paper from '@material-ui/core/Paper'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
@@ -62,24 +60,28 @@ class WorkflowPage extends Component {
   }
 
   render() {
-    const { category, name, responses, code, loading } = this.props
+    const { category, name, responses, loading, tab, workflow } = this.props
 
-    const TreeBuilder = () =>
-      loading ? <LinearProgress /> : <SortableTree items={responses} />
-
-    return (
+    return loading ? (
+      <LinearProgress />
+    ) : (
       <UserLayout>
-        <Typography variant="h3">{name}</Typography>
-        <Typography variant="h6" color="textSecondary">
-          {category}
-        </Typography>
-        <Typography variant="h6" color="textSecondary">
-          {code}
-        </Typography>
-        {/* <Divider style={{ margin: '1rem 0' }} /> */}
-        <CenteredTabs></CenteredTabs>
+        <Flex align="center">
+          <Typography variant="h3">{name}</Typography>
+          <Typography variant="h6" color="textSecondary">
+            {category}
+          </Typography>
+          <Typography variant="h6" color="textSecondary">
+            {workflow.code}
+          </Typography>
+        </Flex>
+        <CenteredTabs />
         <br></br>
-        {this.props.tab === 0 ? <div>CLIENT LIST</div> : <TreeBuilder />}
+        {tab === 0 ? (
+          <div>CLIENT LIST</div>
+        ) : (
+          <SortableTree items={responses} />
+        )}
       </UserLayout>
     )
   }
@@ -91,7 +93,7 @@ export default connect(
     id: state.workflow.id,
     name: state.workflow.name,
     category: state.workflow.category,
-    area_code: state.workflow.area_code,
+    workflow: state.workflow,
     responses: state.responses.unSaved,
     loaded: state.responses.loaded,
     loading: state.responses.isLoadingResponses,
