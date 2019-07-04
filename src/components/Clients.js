@@ -23,7 +23,6 @@ class Clients extends Component {
       .catch(err => console.log(err))
   }
 
-  // TOGGLE BUTTON THAT WILL BE USED
   activeAccount = event => {
     event.preventDefault()
     console.log('STATE', this.state)
@@ -36,6 +35,12 @@ class Clients extends Component {
         console.log('CLIENTS:', res.data)
       })
       .catch(err => this.setState({ errorMsg: 'ERROR: cant add client' }))
+  }
+
+  // TOGGLE CHECKBOX / BUTTON THAT WILL BE USED
+  toggleCheck = e => {
+    console.log('TOGGLE CHECK')
+    this.setState(state => ({ isActive: !state.isActive }))
   }
 
   handleInput = e => {
