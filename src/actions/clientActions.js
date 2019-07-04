@@ -7,7 +7,7 @@ export const LOAD_CLIENTS_FAILURE = 'LOAD_CLIENTS_FAILURE'
 export const loadUserWorkflowsClient = () => dispatch => {
   dispatch({ type: LOAD_CLIENTS_START })
   return axiosInstance
-    .get('https://sauti-studio.herokuapp.com/clients')
+    .get('/clients')
     .then(res => dispatch({ type: LOAD_CLIENTS_SUCCESS, payload: res.data }))
     .catch(err =>
       dispatch({
