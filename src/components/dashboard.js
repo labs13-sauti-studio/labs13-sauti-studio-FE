@@ -22,6 +22,7 @@ import { toggleSidebar } from 'actions'
 import PropTypes from 'prop-types'
 import Avatar from '@material-ui/core/Avatar'
 import { navigate } from 'gatsby'
+import Settings from '@/settings'
 
 function Dashboard({ user, sideBarData, isSidebarOpen, children, dispatch }) {
   const classes = useStyles()
@@ -82,21 +83,7 @@ function Dashboard({ user, sideBarData, isSidebarOpen, children, dispatch }) {
           ))}
         </List>
         <Divider />
-        <List>
-          {['All mail', 'Trash', 'Spam'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List>
-        <List>
-          <ListItem button>
-            <ListItemText primary="Keep sidebar open" />
-          </ListItem>
-        </List>
+        <Settings />
       </Drawer>
       <main
         className={clsx(classes.content, {

@@ -1,7 +1,6 @@
 /* eslint-disable no-unused-expressions */
 /* eslint-disable import/no-named-default */
-import React, { useState, useEffect } from 'react'
-import _ from 'lodash'
+import React, { useState } from 'react'
 import {
   default as ReactSortableTree,
   addNodeUnderParent,
@@ -29,45 +28,47 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import { Flex } from '@/utility'
 
 // Example Demo Workflow
-const exampleFlow = [
+/* const exampleFlow = [
   { id: 1, title: 'Company Info', parent: null, index: 1 },
   { id: 2, title: 'Office Hours', parent: null, index: 2 },
   { id: 3, title: 'Sauti Studio Design', parent: 1, index: 1 },
   { id: 4, title: 'Monday - Friday 9AM-5PM', parent: 2, index: 1 },
   { id: 5, title: 'Company Holidays', parent: 2, index: 2 },
-]
-
-const compareTrees = (oldData, newData) => {
-  const changed = []
-  oldData.forEach(oldRow => {
-    const newRow = newData.find(row => oldRow.id === row.id)
-    if (oldRow.index != newRow.index) changed.push(newRow)
-  })
-  return changed
-}
-
-const indexGenerator = (treeData, node, nextParentNode) =>
-  nextParentNode &&
-  nextParentNode.children &&
-  nextParentNode.children.length !== 0
-    ? nextParentNode.children.findIndex(obj => obj.id === node.id) + 1
-    : treeData.findIndex(obj => obj.id === node.id) + 1
-
-const createTree = (rows, settings) =>
-  getTreeFromFlatData({
-    flatData: rows,
-    getKey: node => node.id,
-    getParentKey: node => node.parent,
-    rootKey: null,
-  })
+] */
 
 const SortableTree = props => {
+  // Create Tree From Database rows
+  const createTree = (rows, settings) =>
+    getTreeFromFlatData({
+      flatData: rows.map(row => ({ ...row, ...settings })),
+      getKey: node => node.id,
+      getParentKey: node => node.parent,
+      rootKey: null,
+    })
+
+  // Generator Index
+  const indexGenerator = (treeData, node, nextParentNode) => {
+    nextParentNode && nextParentNode.children
+      ? nextParentNode.children.findIndex(obj => obj.id === node.id)
+      : treeData.findIndex(obj => obj.id === node.id)
+  }
+
   // User Settings
   const [settings, setSettings] = useState({
     expanded: true,
     expandParent: true,
     addAsFirstChild: true,
   })
+
+  // Find Tree Differences
+  const compareTrees = (oldData, newData) => {
+    const changed = []
+    oldData.forEach(oldRow => {
+      const newRow = newData.find(row => oldRow.id === row.id)
+      if (oldRow.index !== newRow.index) changed.push(newRow)
+    })
+    return changed
+  }
 
   // Initial tree state
   const [treeData, setTreeData] = useState(
@@ -162,14 +163,15 @@ const SortableTree = props => {
          */}
         <ReactSortableTree
           treeData={treeData}
-          onMoveNode={({ treeData, node, nextParentNode, path }) => {
+          // On Branch Move
+          onMoveNode={({ treeData, node, nextParentNode }) => {
             axiosInstance
               .put(`responses/${node.id}`, {
                 ...node,
                 parent: nextParentNode ? nextParentNode.id : null,
                 index: indexGenerator(treeData, node, nextParentNode),
               })
-              .then(({ data: { added, total: newData } }) => {
+              .then(({ data: { total: newData } }) => {
                 const changedRows = compareTrees(flatData, newData)
 
                 changedRows.forEach(row =>
@@ -180,8 +182,15 @@ const SortableTree = props => {
                 )
               })
           }}
-          onChange={treeData => setTreeData(treeData)}
-          onClick={treeData => setTreeData(treeData)}
+          // On Tree Change
+          onChange={newData => {
+            console.log(newData)
+            const changedRows = compareTrees(treeData, newData)
+
+            console.log(changedRows)
+
+            setTreeData(newData)
+          }}
           generateNodeProps={({ node, path }) => ({
             title:
               node.id === props.active.id ? (
