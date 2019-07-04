@@ -6,11 +6,13 @@ import { axiosInstance } from 'helpers'
 import AddClientForm from './forms/AddClientForm'
 
 class Clients extends Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
 
     this.state = {
       clients: [],
+      phone_num: '',
+      isActive: 'true',
     }
   }
 
@@ -19,6 +21,21 @@ class Clients extends Component {
       .get(`/clients`)
       .then(({ data }) => this.setState({ clients: data }))
       .catch(err => console.log(err))
+  }
+
+  // TOGGLE BUTTON THAT WILL BE USED
+  activeAccount = event => {
+    event.preventDefault()
+    console.log('STATE', this.state)
+    axiosInstance
+      .post('/clients', {
+        phone_num: this.state.phone_num,
+        isActive: this.state.isActive,
+      })
+      .then(res => {
+        console.log('CLIENTS:', res.data)
+      })
+      .catch(err => this.setState({ errorMsg: 'ERROR: cant add client' }))
   }
 
   handleInput = e => {
