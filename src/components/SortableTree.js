@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-expressions */
 /* eslint-disable import/no-named-default */
 import React, { useState, useEffect } from 'react'
+import _ from 'lodash'
 import {
   default as ReactSortableTree,
   addNodeUnderParent,
@@ -8,6 +9,7 @@ import {
   toggleExpandedForAll,
   getTreeFromFlatData,
   getNodeAtPath,
+  getFlatDataFromTree,
 } from 'react-sortable-tree'
 import { setActiveRes, saveTree } from 'actions/responsesActions'
 import { axiosInstance } from 'helpers'
@@ -35,12 +37,25 @@ const exampleFlow = [
   { id: 5, title: 'Company Holidays', parent: 2, index: 2 },
 ]
 
+const compareTrees = (oldData, newData) => {
+  const changed = []
+  oldData.forEach(oldRow => {
+    const newRow = newData.find(row => oldRow.id === row.id)
+    if (oldRow.index != newRow.index) changed.push(newRow)
+  })
+  return changed
+}
+
+const indexGenerator = (treeData, node, nextParentNode) =>
+  nextParentNode &&
+  nextParentNode.children &&
+  nextParentNode.children.length !== 0
+    ? nextParentNode.children.findIndex(obj => obj.id === node.id) + 1
+    : treeData.findIndex(obj => obj.id === node.id) + 1
+
 const createTree = (rows, settings) =>
   getTreeFromFlatData({
-    flatData: rows.map(node => ({
-      ...node,
-      ...settings,
-    })),
+    flatData: rows,
     getKey: node => node.id,
     getParentKey: node => node.parent,
     rootKey: null,
@@ -59,12 +74,23 @@ const SortableTree = props => {
     props.items.length === 0 ? [] : createTree(props.items, settings)
   )
   const [title, setTitle] = useState('')
-  const [loading, setLoading] = useState(true)
-  useEffect(() => {
-    setLoading(props.loading)
-  }, [props.loading])
 
   const getNodeKey = ({ treeIndex }) => treeIndex
+
+  const flatData = getFlatDataFromTree({
+    treeData,
+    getNodeKey: ({ node }) => node.id, // This ensures your "id" properties are exported in the path
+    ignoreCollapsed: false, // Makes sure you traverse every node in the tree, not just the visible ones
+  }).map(({ node, path }) => ({
+    ...node,
+    id: node.id,
+    name: node.name,
+
+    // The last entry in the path is this node's key
+    // The second to last entry (accessed here) is the parent node's key
+    parent: path.length > 1 ? path[path.length - 2] : null,
+  }))
+
   return (
     <section>
       <Flex align="center">
@@ -72,7 +98,6 @@ const SortableTree = props => {
           <TextField
             id="standard-name"
             variant="outlined"
-            margin="regular"
             value={title}
             onChange={event => setTitle(event.target.value)}
             onKeyDown={event => {
@@ -137,11 +162,23 @@ const SortableTree = props => {
          */}
         <ReactSortableTree
           treeData={treeData}
-          onMoveNode={({ node, nextIndex }) => {
-            axiosInstance.put(`responses/${node.id}`, {
-              ...node,
-              index: nextIndex,
-            })
+          onMoveNode={({ treeData, node, nextParentNode, path }) => {
+            axiosInstance
+              .put(`responses/${node.id}`, {
+                ...node,
+                parent: nextParentNode ? nextParentNode.id : null,
+                index: indexGenerator(treeData, node, nextParentNode),
+              })
+              .then(({ data: { added, total: newData } }) => {
+                const changedRows = compareTrees(flatData, newData)
+
+                changedRows.forEach(row =>
+                  axiosInstance.put(`/responses/${row.id}`, {
+                    ...row,
+                    index: indexGenerator(treeData, row, nextParentNode),
+                  })
+                )
+              })
           }}
           onChange={treeData => setTreeData(treeData)}
           onClick={treeData => setTreeData(treeData)}
